@@ -796,10 +796,18 @@ body {
   background: var(--error-500);
 }
 
-/* Expired alert card */
+/* Expired / Disabled alert card — stays in Firebase, shown as disabled */
 .alert-card.expired {
-  opacity: 0.4;
-  pointer-events: none;
+  opacity: 0.45;
+  filter: grayscale(0.5);
+  border-color: var(--outline-200);
+  box-shadow: none;
+}
+
+.alert-card.expired:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--outline-200);
 }
 
 /* Urgent alert card (last 1 min) */
@@ -811,4 +819,37 @@ body {
 .badge-status-expired {
   background: var(--secondary-50);
   color: var(--text-muted);
+}
+
+/* ---- Nearby Location Row ---- */
+.alert-location-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: var(--secondary-50);
+  border: 1px solid var(--outline-100);
+  border-radius: var(--radius-sm);
+}
+
+.alert-location-label {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--secondary-400);
+  flex-shrink: 0;
+}
+
+.alert-location-name {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--secondary-700);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
