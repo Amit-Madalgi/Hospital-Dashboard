@@ -1,16 +1,48 @@
-# React + Vite
+# 🏥 Hospital Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Real-time hospital vitals monitoring dashboard built with React + Vite + Firebase.
 
-Currently, two official plugins are available:
+## 🌐 Live Website
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**https://emergency-response-syste-ba2ce.web.app**
 
-## React Compiler
+## 🚀 Deployment Commands
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Build and deploy to Firebase Hosting
+npm run build && firebase deploy --only hosting
 
-## Expanding the ESLint configuration
+# Deploy to a preview channel (for testing before going live)
+firebase hosting:channel:deploy preview
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Open the live site in browser
+firebase open hosting:site
+```
+
+## 💻 Development Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build locally
+npm run preview
+```
+
+## 🔧 Firebase Project
+
+- **Project ID:** emergency-response-syste-ba2ce
+- **Console:** https://console.firebase.google.com/project/emergency-response-syste-ba2ce/overview
+- **Logged in as:** amitmadalgi412@gmail.com
+
+## Tech Stack
+
+- **Frontend:** React 19 + Vite 8
+- **Backend:** Firebase Realtime Database
+- **Hosting:** Firebase Hosting

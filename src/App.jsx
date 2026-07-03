@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { database } from './firebaseConfig';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, remove } from 'firebase/database';
 import AlertsList from './components/AlertsList';
 import VitalsMonitor from './components/VitalsMonitor';
+
+// Must match the Ambulance Navigator App expiry duration
+const ALERT_EXPIRY_MS = 5 * 60 * 1000;
 
 export default function App() {
   const [alerts, setAlerts] = useState([]);
@@ -21,6 +24,14 @@ export default function App() {
         // Sort by newest first
         alertsList.sort((a, b) => b.timestampMs - a.timestampMs);
         setAlerts(alertsList);
+
+        // Auto-remove expired pending alerts from Firebase
+        const currentTime = Date.now();
+        alertsList.forEach((alert) => {
+          if (alert.status !== 'accepted' && (currentTime - alert.timestampMs) >= ALERT_EXPIRY_MS) {
+            remove(ref(database, `alerts/${alert.id}`)).catch(console.error);
+          }
+        });
 
         // Auto-select the first alert if none selected
         if (!selectedAlertId && alertsList.length > 0) {

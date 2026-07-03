@@ -670,3 +670,145 @@ body {
   color: var(--text-muted);
   margin-top: 2px;
 }
+
+/* ---- Alert Timer & Countdown ---- */
+.alert-time-group {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.alert-elapsed {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--secondary-500);
+  margin-top: 2px;
+}
+
+.countdown-bar {
+  margin: 8px 0 6px;
+  border-radius: var(--radius-sm);
+  padding: 6px 10px 8px;
+  border: 1px solid;
+}
+
+.countdown-bar.countdown-normal {
+  background: var(--secondary-50);
+  border-color: var(--outline-100);
+}
+
+.countdown-bar.countdown-warning {
+  background: var(--warning-50);
+  border-color: var(--warning-200);
+}
+
+.countdown-bar.countdown-critical {
+  background: var(--error-50);
+  border-color: var(--error-200);
+  animation: pulse-urgency 1.5s ease-in-out infinite;
+}
+
+.countdown-bar.countdown-expired {
+  background: var(--secondary-50);
+  border-color: var(--outline-200);
+  opacity: 0.6;
+}
+
+@keyframes pulse-urgency {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+.countdown-bar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.countdown-label {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.countdown-normal .countdown-label {
+  color: var(--secondary-500);
+}
+
+.countdown-warning .countdown-label {
+  color: var(--warning-700);
+}
+
+.countdown-critical .countdown-label {
+  color: var(--error-600);
+}
+
+.countdown-expired .countdown-label {
+  color: var(--text-muted);
+}
+
+.countdown-value {
+  font-size: 0.8125rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown-normal .countdown-value {
+  color: var(--secondary-700);
+}
+
+.countdown-warning .countdown-value {
+  color: var(--warning-700);
+}
+
+.countdown-critical .countdown-value {
+  color: var(--error-600);
+}
+
+.countdown-expired .countdown-value {
+  color: var(--text-muted);
+}
+
+.countdown-progress-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.countdown-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+
+.countdown-fill-normal {
+  background: var(--secondary-400);
+}
+
+.countdown-fill-warning {
+  background: var(--warning-500);
+}
+
+.countdown-fill-critical {
+  background: var(--error-500);
+}
+
+/* Expired alert card */
+.alert-card.expired {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Urgent alert card (last 1 min) */
+.alert-card.urgent {
+  border-color: var(--error-400);
+  box-shadow: 0 0 0 1px rgba(214, 40, 40, 0.1), var(--shadow-soft-1);
+}
+
+.badge-status-expired {
+  background: var(--secondary-50);
+  color: var(--text-muted);
+}
