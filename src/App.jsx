@@ -4,18 +4,11 @@ import { ref, onValue } from 'firebase/database';
 import AlertsList from './components/AlertsList';
 import VitalsMonitor from './components/VitalsMonitor';
 
-// Must match the Ambulance Navigator App expiry duration
-const ALERT_EXPIRY_MS = 5 * 60 * 1000;
-
 export default function App() {
   const [alerts, setAlerts] = useState([]);
   const [selectedAlertId, setSelectedAlertId] = useState(null);
 
-  // Track which alerts already existed when the dashboard first loaded.
-  // These are exempt from the countdown timer (same as Navigator app).
-  const preExistingAlertIds = useRef(new Set());
-  const isFirstLoad = useRef(true);
-  
+
   // Track local arrival times to fallback when ESP32 sends a bad timestamp (e.g., 0)
   const localArrivalTimes = useRef({});
 
@@ -43,11 +36,7 @@ export default function App() {
         // Sort by newest first
         alertsList.sort((a, b) => b.timestampMs - a.timestampMs);
 
-        // First load — record all existing alert IDs so they are exempt from timer
-        if (isFirstLoad.current) {
-          preExistingAlertIds.current = new Set(alertsList.map((a) => a.id));
-          isFirstLoad.current = false;
-        }
+
 
         setAlerts(alertsList);
 
@@ -83,7 +72,6 @@ export default function App() {
             alerts={alerts}
             selectedAlertId={selectedAlertId}
             onSelectAlert={setSelectedAlertId}
-            preExistingAlertIds={preExistingAlertIds.current}
           />
         </div>
 

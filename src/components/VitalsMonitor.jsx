@@ -169,8 +169,8 @@ export default function VitalsMonitor({ alertId }) {
         </div>
         <WaveformChart
           type="ppg"
-          hrValue={vitals?.hr || 75}
-          spo2Value={vitals?.spo2 || 98}
+          hrValue={vitals?.hr ?? 75}
+          spo2Value={vitals?.spo2 ?? 98}
           width={chartWidth}
           height={120}
           strokeColor="#D62828"
@@ -186,8 +186,8 @@ export default function VitalsMonitor({ alertId }) {
         </div>
         <WaveformChart
           type="spo2"
-          hrValue={vitals?.hr || 75}
-          spo2Value={vitals?.spo2 || 98}
+          hrValue={vitals?.hr ?? 75}
+          spo2Value={vitals?.spo2 ?? 98}
           width={chartWidth}
           height={120}
           strokeColor="#0694A2"

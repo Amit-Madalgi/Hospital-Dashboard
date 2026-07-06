@@ -32,9 +32,14 @@ export default function WaveformChart({
 
       let val = 10;
 
-      if (type === 'ppg') {
+      if (currentHr <= 0) {
+        // Flatline if HR is 0 or less
+        val = (type === 'ppg' ? 10 : 20) + (Math.random() - 0.5) * 2;
+      } else if (type === 'ppg') {
         // PPG (Heart Rate Pulse) waveform with systolic and diastolic peaks
-        const ppgPeriod = Math.max(12, Math.min(40, Math.floor((60 / currentHr) * 20)));
+        // 1 tick = 40ms. To get exactly `currentHr` beats per minute:
+        // ticks per beat = (60 / currentHr) / 0.04 = 1500 / currentHr
+        const ppgPeriod = Math.max(8, Math.floor(1500 / currentHr));
         const ppgPhase = tickRef.current % ppgPeriod;
 
         if (ppgPhase < ppgPeriod * 0.15) {
@@ -54,9 +59,10 @@ export default function WaveformChart({
         // Slight noise for realism
         val += (Math.random() - 0.5) * 1.5;
       } else {
-        // SpO2 (Oxygen Wave) — slow undulating respiratory wave
-        const ppgPeriod = Math.max(12, Math.min(40, Math.floor((60 / currentHr) * 20)));
-        const spo2Period = ppgPeriod * 2.5;
+        // SpO2 (Oxygen Wave)
+        const ppgPeriod = Math.max(8, Math.floor(1500 / currentHr));
+        // Respiratory rate is usually tied to HR, typically ~ 1/4th of HR. Let's make it 1/3rd for visual pacing
+        const spo2Period = ppgPeriod * 3;
         const spo2Phase = tickRef.current % spo2Period;
 
         val = 20;

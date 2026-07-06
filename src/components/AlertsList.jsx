@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-// Must match the value used in the Ambulance Navigator App
-const ALERT_EXPIRY_MS = 5 * 60 * 1000;
-
 // Predefined landmarks — fallback when reverse geocoding fails
 const KNOWN_LOCATIONS = [
   { name: 'Columbia University Medical Center, NY', lat: 40.8424, lng: -73.9430 },
@@ -33,7 +30,7 @@ function getFallbackLocation(lat, lng) {
   return minDist > 1.5 ? `Area near ${lat.toFixed(4)}, ${lng.toFixed(4)}` : nearest;
 }
 
-export default function AlertsList({ alerts, selectedAlertId, onSelectAlert, preExistingAlertIds }) {
+export default function AlertsList({ alerts, selectedAlertId, onSelectAlert }) {
   const [now, setNow] = useState(Date.now());
   const [locationNames, setLocationNames] = useState({});
 
@@ -77,25 +74,6 @@ export default function AlertsList({ alerts, selectedAlertId, onSelectAlert, pre
     return `${mins}m ${secs}s ago`;
   }, [now]);
 
-  const formatCountdown = useCallback((timestampMs) => {
-    const remainMs = Math.max(0, ALERT_EXPIRY_MS - (now - timestampMs));
-    const mins = Math.floor(remainMs / 60000);
-    const secs = Math.floor((remainMs % 60000) / 1000);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  }, [now]);
-
-  const getCountdownUrgency = useCallback((timestampMs) => {
-    const remainMs = ALERT_EXPIRY_MS - (now - timestampMs);
-    if (remainMs <= 60000) return 'critical';
-    if (remainMs <= 120000) return 'warning';
-    return 'normal';
-  }, [now]);
-
-  const getProgressPercent = useCallback((timestampMs) => {
-    const remainMs = Math.max(0, ALERT_EXPIRY_MS - (now - timestampMs));
-    return (remainMs / ALERT_EXPIRY_MS) * 100;
-  }, [now]);
-
   if (alerts.length === 0) {
     return (
       <div className="no-alerts">
@@ -110,18 +88,12 @@ export default function AlertsList({ alerts, selectedAlertId, onSelectAlert, pre
       {alerts.map((alert) => {
         const isAccepted = alert.status === 'accepted';
         const isSelected = alert.id === selectedAlertId;
-        // Pre-existing alerts (loaded from Firebase on first open) don't get timers or time-based expiry
-        const isPreExisting = preExistingAlertIds && preExistingAlertIds.has(alert.id);
-        // Alerts only expire if they are marked as expired in Firebase
-        // (This matches the exact logic in the Navigator app)
-        const isExpired = alert.status === 'expired';
-        const hasTimer = !isAccepted && !isExpired && !isPreExisting;
-        const urgency = hasTimer ? getCountdownUrgency(alert.timestampMs) : 'normal';
+
 
         return (
           <div
             key={alert.id}
-            className={`alert-card${isSelected ? ' selected' : ''}${isAccepted ? ' accepted' : ''}${isExpired ? ' expired' : ''}${hasTimer && urgency === 'critical' ? ' urgent' : ''}`}
+            className={`alert-card${isSelected ? ' selected' : ''}${isAccepted ? ' accepted' : ''}`}
             onClick={() => onSelectAlert(alert.id)}
             id={`alert-card-${alert.id}`}
           >
@@ -140,35 +112,7 @@ export default function AlertsList({ alerts, selectedAlertId, onSelectAlert, pre
               </div>
             </div>
 
-            {/* Countdown timer — only for NEW pending alerts (not pre-existing) */}
-            {hasTimer && (
-              <div className={`countdown-bar countdown-${urgency}`}>
-                <div className="countdown-bar-inner">
-                  <span className="countdown-label">
-                    {urgency === 'critical' ? '⚠ Expiring Soon' : 'Expires In'}
-                  </span>
-                  <span className="countdown-value">
-                    {formatCountdown(alert.timestampMs)}
-                  </span>
-                </div>
-                <div className="countdown-progress-track">
-                  <div
-                    className={`countdown-progress-fill countdown-fill-${urgency}`}
-                    style={{ width: `${getProgressPercent(alert.timestampMs)}%` }}
-                  />
-                </div>
-              </div>
-            )}
 
-            {/* Expired badge */}
-            {isExpired && (
-              <div className="countdown-bar countdown-expired">
-                <div className="countdown-bar-inner">
-                  <span className="countdown-label">⛔ Expired</span>
-                  <span className="countdown-value">0:00</span>
-                </div>
-              </div>
-            )}
 
             <div className="alert-badges">
               {alert.gpsValid ? (
@@ -183,8 +127,6 @@ export default function AlertsList({ alerts, selectedAlertId, onSelectAlert, pre
 
               {isAccepted ? (
                 <span className="badge badge-status-accepted">✓ Accepted</span>
-              ) : isExpired ? (
-                <span className="badge badge-status-expired">✕ Expired</span>
               ) : (
                 <span className="badge badge-status-pending">● Pending</span>
               )}
